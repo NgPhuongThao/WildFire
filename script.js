@@ -1,4 +1,4 @@
-let forestScript = require("./script/Forest.js");
+const forestScript = require("./script/Forest.js");
 
 $.getJSON('res/conf.json', function (data) {
    // Declare parameters
@@ -6,7 +6,7 @@ $.getJSON('res/conf.json', function (data) {
    let width;
    let spread_probability;
 
-   // Get value from JSON
+   // Get parameters from JSON file
    $.each(data, function (key, val) {
       if (key === "dimensions") {
          height = val["height"];
@@ -14,27 +14,19 @@ $.getJSON('res/conf.json', function (data) {
       } else { spread_probability = val; }
    });
 
-   let forest = new forestScript.Forest(height, width, spread_probability);
-
    // Create simulation
+   const forest = new forestScript.Forest(height, width, spread_probability);
    const table = document.getElementsByTagName("table")[0];
 
-   // Randomize the first fire
-   const firstFireHeight = Math.floor(Math.random() * ( height ));
-   const firstFireWidth = Math.floor(Math.random() * ( width ));
-
-   for (let i = 0; i < height; i++) {
+   forest.Forest.forEach((row) => {
       const tr = document.createElement("tr");
-      for (let j = 0; j < width; j++) {
+      row.forEach((tile) => {
          const td = document.createElement("td");
-         
-         if (Math.floor(Math.random() * ( height * width )) === 0 
-            || ( i === firstFireHeight && j === firstFireWidth )) 
-            td.innerText = "🔥";
-         else td.innerText = "🌳";
+         td.innerText = tile;
 
          tr.appendChild(td);
-      }
+      });
       table.appendChild(tr);
-   }
+   });
+
 });

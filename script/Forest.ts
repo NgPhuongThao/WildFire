@@ -13,12 +13,20 @@ export class Forest {
         this.m_height = height;
         this.m_width = width;
         this.m_spread_probability = spread_probability;
+        
+        this.m_forest = [];
+        for (var i = 0; i < height; i++) {
+            this.m_forest[i] = [];
+            for (var j = 0; j < width; j++) {
+                this.m_forest[i][j] = tileStates.TREE;
+            }
+        }
 
-        this.m_forest = Array(height).fill(Array(width).fill(tileStates.TREE));
         this.m_fires = [];
 
         // Start at least one fire
-        for (let i = 0; i < Math.floor(Math.random() * ( (height * width)/2 )); i++) {
+        const numberOfFire = Math.floor(Math.random() * ( (height * width)/2 )) + 1;
+        for (let i = 0; i < 3; i++) {
             const y = Math.floor(Math.random() * ( height ));
             const x = Math.floor(Math.random() * ( width ));
 

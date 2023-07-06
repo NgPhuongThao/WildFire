@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-let forestScript = require("./script/Forest.js");
+const forestScript = require("./script/Forest.js");
 
 $.getJSON('res/conf.json', function (data) {
    // Declare parameters
@@ -7,7 +7,7 @@ $.getJSON('res/conf.json', function (data) {
    let width;
    let spread_probability;
 
-   // Get value from JSON
+   // Get parameters from JSON file
    $.each(data, function (key, val) {
       if (key === "dimensions") {
          height = val["height"];
@@ -15,31 +15,21 @@ $.getJSON('res/conf.json', function (data) {
       } else { spread_probability = val; }
    });
 
-   console.log("oui");
-   let forest = new forestScript.Forest(height, width, spread_probability);
-   console.log(forest);
-
    // Create simulation
+   const forest = new forestScript.Forest(height, width, spread_probability);
    const table = document.getElementsByTagName("table")[0];
 
-   // Randomize the first fire
-   const firstFireHeight = Math.floor(Math.random() * ( height ));
-   const firstFireWidth = Math.floor(Math.random() * ( width ));
-
-   for (let i = 0; i < height; i++) {
+   forest.Forest.forEach((row) => {
       const tr = document.createElement("tr");
-      for (let j = 0; j < width; j++) {
+      row.forEach((tile) => {
          const td = document.createElement("td");
-         
-         if (Math.floor(Math.random() * ( height * width )) === 0 
-            || ( i === firstFireHeight && j === firstFireWidth )) 
-            td.innerText = "🔥";
-         else td.innerText = "🌳";
+         td.innerText = tile;
 
          tr.appendChild(td);
-      }
+      });
       table.appendChild(tr);
-   }
+   });
+
 });
 
 },{"./script/Forest.js":3}],2:[function(require,module,exports){
@@ -67,10 +57,17 @@ class Forest {
         this.m_height = height;
         this.m_width = width;
         this.m_spread_probability = spread_probability;
-        this.m_forest = Array(height).fill(Array(width).fill(TileStates_1.tileStates.TREE));
+        this.m_forest = [];
+        for (var i = 0; i < height; i++) {
+            this.m_forest[i] = [];
+            for (var j = 0; j < width; j++) {
+                this.m_forest[i][j] = TileStates_1.tileStates.TREE;
+            }
+        }
         this.m_fires = [];
         // Start at least one fire
-        for (let i = 0; i < Math.floor(Math.random() * ((height * width) / 2)); i++) {
+        const numberOfFire = Math.floor(Math.random() * ((height * width) / 2)) + 1;
+        for (let i = 0; i < 3; i++) {
             const y = Math.floor(Math.random() * (height));
             const x = Math.floor(Math.random() * (width));
             this.m_forest[y][x] = TileStates_1.tileStates.FIRE;
