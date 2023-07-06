@@ -18,47 +18,58 @@ class Forest {
         this.m_fires = [];
         // Start at least one fire
         const numberOfFire = Math.floor(Math.random() * ((height * width) / 2)) + 1;
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < numberOfFire; i++) {
             const y = Math.floor(Math.random() * (height));
             const x = Math.floor(Math.random() * (width));
             this.m_forest[y][x] = TileStates_1.tileStates.FIRE;
             this.m_fires.push(new Fire_1.Fire(x, y));
         }
+        this.m_fires.sort();
     }
     get Forest() { return this.m_forest; }
     next() {
         let newFires = []; // New Fires
-        // Spread fire to adgacents tiles
+        // Spread fire to adjacent tiles
         this.m_fires.forEach((fire) => {
+            this.setToAsh(fire); // Old fires becomes ashes
             let newFire;
             if (fire.Y < this.m_height - 1 && this.isSpread()) {
-                newFire = new Fire_1.Fire(fire.X, fire.Y + 1);
-                newFires.push(newFire);
-                this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                if (this.m_forest[fire.Y + 1][fire.X] === TileStates_1.tileStates.TREE) {
+                    newFire = new Fire_1.Fire(fire.X, fire.Y + 1);
+                    newFires.push(newFire);
+                    this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                }
             }
             if (fire.Y > 0 && this.isSpread()) {
-                newFire = new Fire_1.Fire(fire.X, fire.Y - 1);
-                newFires.push(newFire);
-                this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                if (this.m_forest[fire.Y - 1][fire.X] === TileStates_1.tileStates.TREE) {
+                    newFire = new Fire_1.Fire(fire.X, fire.Y - 1);
+                    newFires.push(newFire);
+                    this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                }
             }
             if (fire.X < this.m_width - 1 && this.isSpread()) {
-                newFire = new Fire_1.Fire(fire.X + 1, fire.Y);
-                newFires.push(newFire);
-                this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                if (this.m_forest[fire.Y][fire.X + 1] === TileStates_1.tileStates.TREE) {
+                    newFire = new Fire_1.Fire(fire.X + 1, fire.Y);
+                    newFires.push(newFire);
+                    this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                }
             }
             if (fire.X > 0 && this.isSpread()) {
-                newFire = new Fire_1.Fire(fire.X - 1, fire.Y);
-                newFires.push(newFire);
-                this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                if (this.m_forest[fire.Y][fire.X - 1] === TileStates_1.tileStates.TREE) {
+                    newFire = new Fire_1.Fire(fire.X - 1, fire.Y);
+                    newFires.push(newFire);
+                    this.m_forest[newFire.Y][newFire.X] = TileStates_1.tileStates.FIRE;
+                }
             }
-            this.setToAsh(fire); // Old fires becomes ashes
         });
         this.m_fires = newFires;
-        return this.m_forest;
+        this.m_fires.sort();
     }
     isDone() { return this.m_fires.length === 0; }
     setToAsh(fire) { this.m_forest[fire.Y][fire.X] = TileStates_1.tileStates.ASH; }
-    isSpread() { return Math.random() < this.m_spread_probability; }
+    isSpread() {
+        return Math.random() <= this.m_spread_probability;
+    }
 }
 exports.Forest = Forest;
 //# sourceMappingURL=Forest.js.map

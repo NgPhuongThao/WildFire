@@ -1,5 +1,8 @@
 const forestScript = require("./script/Forest.js");
 
+let forest;
+let countTrials = 0;
+
 $.getJSON('res/conf.json', function (data) {
    // Declare parameters
    let height;
@@ -15,7 +18,8 @@ $.getJSON('res/conf.json', function (data) {
    });
 
    // Create simulation
-   const forest = new forestScript.Forest(height, width, spread_probability);
+   forest = new forestScript.Forest(height, width, spread_probability);
+   
    const table = document.getElementsByTagName("table")[0];
 
    forest.Forest.forEach((row) => {
@@ -28,5 +32,34 @@ $.getJSON('res/conf.json', function (data) {
       });
       table.appendChild(tr);
    });
-
 });
+
+$(document).ready(function() {
+   $("#next").click(function (){
+      if (!forest.IsDone) {
+         forest.next();
+
+         loadSimulation()
+
+         countTrials++;
+
+      } else getElementById("next").remove();
+
+   });
+});
+
+function loadSimulation() {
+   const table = document.getElementsByTagName("table")[0];
+
+   let i = 0;
+   forest.Forest.forEach((row) => {
+      const tr = document.getElementsByTagName("tr")[i];
+      let j = 0;
+      row.forEach((tile) => {
+         const td = tr.childNodes[j];
+         td.innerText = tile;
+         j++;
+      });
+      i++;
+   });
+}
