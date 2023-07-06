@@ -8,11 +8,14 @@ export class Forest {
     private m_height : number;
     private m_width : number;
     private m_spread_probability : number;
+
+    private m_countAshes : number;
     
     constructor(height: number, width: number, spread_probability: number) {
         this.m_height = height;
         this.m_width = width;
         this.m_spread_probability = spread_probability;
+        this.m_countAshes = 0;
 
         this.m_forest = [];
         for (var i = 0; i < height; i++) {
@@ -90,9 +93,14 @@ export class Forest {
 
     public isDone () : boolean { return this.m_fires.length === 0; }
 
-    private setToAsh(fire : Fire) { this.m_forest[fire.Y][fire.X] = tileStates.ASH; }
+    private setToAsh(fire : Fire) { 
+        this.m_forest[fire.Y][fire.X] = tileStates.ASH; 
+        this.m_countAshes++;
+    }
 
     private isSpread() : boolean { 
         return Math.random() <= this.m_spread_probability; 
     }
+
+    public get CountAshes() { return this.m_countAshes; }
 }

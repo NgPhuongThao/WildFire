@@ -8,6 +8,7 @@ class Forest {
         this.m_height = height;
         this.m_width = width;
         this.m_spread_probability = spread_probability;
+        this.m_countAshes = 0;
         this.m_forest = [];
         for (var i = 0; i < height; i++) {
             this.m_forest[i] = [];
@@ -66,10 +67,14 @@ class Forest {
         this.m_fires.sort();
     }
     isDone() { return this.m_fires.length === 0; }
-    setToAsh(fire) { this.m_forest[fire.Y][fire.X] = TileStates_1.tileStates.ASH; }
+    setToAsh(fire) {
+        this.m_forest[fire.Y][fire.X] = TileStates_1.tileStates.ASH;
+        this.m_countAshes++;
+    }
     isSpread() {
         return Math.random() <= this.m_spread_probability;
     }
+    get CountAshes() { return this.m_countAshes; }
 }
 exports.Forest = Forest;
 //# sourceMappingURL=Forest.js.map

@@ -36,14 +36,15 @@ $.getJSON('res/conf.json', function (data) {
 
 $(document).ready(function() {
    $("#next").click(function (){
-      if (!forest.IsDone) {
+      if (!forest.isDone()) {
          forest.next();
 
          loadSimulation()
 
          countTrials++;
-
-      } else getElementById("next").remove();
+         document.getElementById("countTrials").innerText = countTrials;
+         if (forest.isDone()) document.querySelector("#next").disabled = true;
+      } 
 
    });
 });
