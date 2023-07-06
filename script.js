@@ -1,3 +1,5 @@
+let forestScript = require("./script/Forest.js");
+
 $.getJSON('res/conf.json', function (data) {
    // Declare parameters
    let height;
@@ -11,6 +13,8 @@ $.getJSON('res/conf.json', function (data) {
          width = val["width"];
       } else { spread_probability = val; }
    });
+
+   let forest = new forestScript.Forest(height, width, spread_probability);
 
    // Create simulation
    const table = document.getElementsByTagName("table")[0];
